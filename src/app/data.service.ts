@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, combineLatest } from 'rxjs';
+import { Observable, of, combineLatest, BehaviorSubject } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 
 @Injectable({
@@ -21,4 +21,8 @@ export class DataService {
   getCombineLatest$ = combineLatest([this.getList$, this.getNumbers1$]);
 
   getWithLatestFrom$ = this.getList$.pipe(withLatestFrom(this.getNumbers2$));
+
+  getBehaviorSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    true
+  );
 }

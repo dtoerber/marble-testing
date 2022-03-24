@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { DataService } from './data.service';
 import { TestScheduler } from 'rxjs/testing';
 import { throttleTime } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
 
 describe('DataService', () => {
   let service: DataService;
@@ -44,7 +45,7 @@ describe('DataService', () => {
   });
 
   it('should return the getWithLatestFrom$ default values', () => {
-    testScheduler.run(({ expectObservable, cold }) => {
+    testScheduler.run(({ expectObservable }) => {
       const expected = '(d|)';
       const expectedResult = {
         d: [
@@ -70,6 +71,19 @@ describe('DataService', () => {
 
       expectObservable(e1.pipe(throttleTime(t))).toBe(expected);
       expectSubscriptions(e1.subscriptions).toBe(e1subs);
+    });
+  });
+
+  it('should return the getBehaviorSubject$ default value', () => {
+    testScheduler.run(({ expectObservable }) => {
+      const replaySubject$ = new ReplaySubject<boolean>();
+      service.getBehaviorSubject$.subscribe(replaySubject$);
+
+      const expected = '(a)';
+      const expectedResult = {
+        a: true,
+      };
+      expectObservable(replaySubject$).toBe(expected, expectedResult);
     });
   });
 });
